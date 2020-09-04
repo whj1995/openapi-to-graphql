@@ -558,14 +558,14 @@ function getResolver({ operation, argsFromLink = {}, payloadName, data, baseUrl,
                                     }
                                     saneData = arraySaneData;
                                 }
-                                if (hooks.beforeResponseResolve) {
-                                    hooks.beforeResponseResolve(source, args, context, Object.assign(Object.assign({}, info), { body: saneData }));
+                                if (hooks.processResponse) {
+                                    saneData = hooks.processResponse(source, args, context, info, saneData);
                                 }
                                 resolve(saneData);
                             }
                             else {
-                                if (hooks.beforeResponseResolve) {
-                                    hooks.beforeResponseResolve(source, args, context, Object.assign(Object.assign({}, info), { body: body }));
+                                if (hooks.processResponse) {
+                                    body = hooks.processResponse(source, args, context, info, body);
                                 }
                                 // TODO: Handle YAML
                                 resolve(body);

@@ -70,7 +70,7 @@ export type RequestOptions<TSource, TContext, TArgs> = Omit<
 export type Options<TSource, TContext, TArgs> = Partial<InternalOptions<TSource, TContext, TArgs>>
 
 export type Hooks<TSource, TContext, TArgs> = {
-  beforeResponseResolve?: (source: TSource, args: TArgs, ctx: TContext, info: GraphQLResolveInfo & {body: any}) => void;
+  processResponse?: (source: TSource, args: TArgs, ctx: TContext, info: GraphQLResolveInfo, body: any) => any;
 };
 
 export type InternalOptions<TSource, TContext, TArgs> = {

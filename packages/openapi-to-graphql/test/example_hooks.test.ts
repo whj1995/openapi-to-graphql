@@ -30,12 +30,12 @@ beforeAll(() => {
   return Promise.all([
     openAPIToGraphQL
       .createGraphQLSchema(oas, { operationIdFieldNames: true, hooks: {
-        beforeResponseResolve: (_, __, ___, info) => {
+        processResponse: (_, __, ___, info) => {
           if (info.fieldName === 'getUser') {
-            info.body.name = 'getUser_haschange'
+            return {name: 'getUser_haschange'};
           }
           if (info.fieldName === 'user') {
-            info.body.name = 'user_haschange'
+            return {name: 'user_haschange'}
           }
         }
       } })

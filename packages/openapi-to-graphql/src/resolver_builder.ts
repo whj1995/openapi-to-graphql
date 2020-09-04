@@ -808,13 +808,13 @@ export function getResolver<TSource, TContext, TArgs>({
 
                   saneData = arraySaneData
                 }
-                if (hooks.beforeResponseResolve) {
-                  hooks.beforeResponseResolve(source, args, context, {...info, body: saneData});
+                if (hooks.processResponse) {
+                  saneData = hooks.processResponse(source, args, context, info, saneData);
                 }
                 resolve(saneData)
               } else {
-                if (hooks.beforeResponseResolve) {
-                  hooks.beforeResponseResolve(source, args, context, {...info, body: body});
+                if (hooks.processResponse) {
+                  body = hooks.processResponse(source, args, context, info, body);
                 }
                 // TODO: Handle YAML
 
