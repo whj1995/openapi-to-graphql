@@ -1,5 +1,5 @@
 {
-  "name": "openapi-to-graphql-root",
+  "name": "openapi-to-graphql-root-pwr",
   "private": true,
   "scripts": {
     "test": "cd packages/openapi-to-graphql/ && npm test"

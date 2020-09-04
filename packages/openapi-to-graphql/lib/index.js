@@ -109,7 +109,7 @@ headers, qs, requestOptions, connectOptions, baseUrl, customResolvers, customSub
 // Authentication options
 viewer, tokenJSONpath, sendOAuthTokenInQuery, 
 // Logging options
-provideErrorExtensions, equivalentToMessages }) {
+provideErrorExtensions, equivalentToMessages, hooks = {} }) {
     const options = {
         strict,
         report,
@@ -137,7 +137,8 @@ provideErrorExtensions, equivalentToMessages }) {
         sendOAuthTokenInQuery,
         // Logging options
         provideErrorExtensions,
-        equivalentToMessages
+        equivalentToMessages,
+        hooks
     };
     translationLog(`Options: ${JSON.stringify(options)}`);
     /**
@@ -157,7 +158,7 @@ provideErrorExtensions, equivalentToMessages }) {
     // Add Query and Mutation fields
     Object.entries(data.operations).forEach(([operationId, operation]) => {
         translationLog(`Process operation '${operation.operationString}'...`);
-        const field = getFieldForOperation(operation, options.baseUrl, data, requestOptions, connectOptions);
+        const field = getFieldForOperation(operation, options.baseUrl, data, requestOptions, connectOptions, hooks);
         const saneOperationId = Oas3Tools.sanitize(operationId, Oas3Tools.CaseStyle.camelCase);
         // Check if the operation should be added as a Query or Mutation
         if (operation.operationType === graphql_1.GraphQLOperationType.Query) {
@@ -277,7 +278,7 @@ provideErrorExtensions, equivalentToMessages }) {
     // Add Subscription fields
     Object.entries(data.callbackOperations).forEach(([operationId, operation]) => {
         translationLog(`Process operation '${operationId}'...`);
-        let field = getFieldForOperation(operation, options.baseUrl, data, requestOptions, connectOptions);
+        let field = getFieldForOperation(operation, options.baseUrl, data, requestOptions, connectOptions, hooks);
         const saneOperationId = Oas3Tools.sanitize(operationId, Oas3Tools.CaseStyle.camelCase);
         let saneFieldName = Oas3Tools.storeSaneName(saneOperationId, operationId, data.saneMap);
         if (operation.inViewer) {
@@ -402,7 +403,7 @@ provideErrorExtensions, equivalentToMessages }) {
 /**
  * Creates the field object for the given operation.
  */
-function getFieldForOperation(operation, baseUrl, data, requestOptions, connectOptions) {
+function getFieldForOperation(operation, baseUrl, data, requestOptions, connectOptions, hooks) {
     // Create GraphQL Type for response:
     const type = schema_builder_1.getGraphQLType({
         def: operation.responseDefinition,
@@ -432,7 +433,8 @@ function getFieldForOperation(operation, baseUrl, data, requestOptions, connectO
         const resolve = resolver_builder_1.getPublishResolver({
             operation,
             responseName: responseSchemaName,
-            data
+            data,
+            hooks
         });
         const subscribe = resolver_builder_1.getSubscribe({
             operation,
@@ -456,7 +458,8 @@ function getFieldForOperation(operation, baseUrl, data, requestOptions, connectO
             payloadName: payloadSchemaName,
             data,
             baseUrl,
-            requestOptions
+            requestOptions,
+            hooks
         });
         return {
             type,

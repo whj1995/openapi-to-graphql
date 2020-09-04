@@ -9,7 +9,7 @@
 
 // Type imports:
 import { SchemaObject, ParameterObject } from './types/oas3'
-import { ConnectOptions } from './types/options'
+import { ConnectOptions, Hooks } from './types/options'
 import { Operation } from './types/operation'
 import { SubscriptionContext } from './types/graphql'
 import { PreprocessingData } from './types/preprocessing_data'
@@ -54,6 +54,7 @@ type GetResolverParams<TSource, TContext, TArgs> = {
   data: PreprocessingData<TSource, TContext, TArgs>
   baseUrl?: string
   requestOptions?: RequestOptions<TSource, TContext, TArgs>
+  hooks: Hooks<TSource, TContext, TArgs>
 }
 
 type GetSubscribeParams<TSource, TContext, TArgs> = {
@@ -297,7 +298,8 @@ export function getResolver<TSource, TContext, TArgs>({
   payloadName,
   data,
   baseUrl,
-  requestOptions
+  requestOptions,
+  hooks
 }: GetResolverParams<TSource, TContext, TArgs>): GraphQLFieldResolver<
   TSource,
   TContext,
@@ -307,7 +309,7 @@ export function getResolver<TSource, TContext, TArgs>({
   if (typeof baseUrl === 'undefined') {
     baseUrl = Oas3Tools.getBaseUrl(operation)
   }
-
+  
   // Return custom resolver if it is defined
   const customResolvers = data.options.customResolvers
   const title = operation.oas.info.title
@@ -806,9 +808,14 @@ export function getResolver<TSource, TContext, TArgs>({
 
                   saneData = arraySaneData
                 }
-
+                if (hooks.beforeResponseResolve) {
+                  hooks.beforeResponseResolve(source, args, context, {...info, body: saneData});
+                }
                 resolve(saneData)
               } else {
+                if (hooks.beforeResponseResolve) {
+                  hooks.beforeResponseResolve(source, args, context, {...info, body: body});
+                }
                 // TODO: Handle YAML
 
                 resolve(body)

@@ -35,7 +35,8 @@ import {
   Options,
   InternalOptions,
   Report,
-  ConnectOptions
+  ConnectOptions,
+  Hooks
 } from './types/options'
 import { Oas3 } from './types/oas3'
 import { Oas2 } from './types/oas2'
@@ -215,7 +216,9 @@ function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
 
     // Logging options
     provideErrorExtensions,
-    equivalentToMessages
+    equivalentToMessages,
+
+    hooks = {}
   }: InternalOptions<TSource, TContext, TArgs>
 ): { schema: GraphQLSchema; report: Report } {
   const options = {
@@ -249,7 +252,9 @@ function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
 
     // Logging options
     provideErrorExtensions,
-    equivalentToMessages
+    equivalentToMessages,
+
+    hooks
   }
   translationLog(`Options: ${JSON.stringify(options)}`)
 
@@ -297,7 +302,8 @@ function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
       options.baseUrl,
       data,
       requestOptions,
-      connectOptions
+      connectOptions,
+      hooks
     )
 
     const saneOperationId = Oas3Tools.sanitize(
@@ -459,7 +465,8 @@ function translateOpenAPIToGraphQL<TSource, TContext, TArgs>(
         options.baseUrl,
         data,
         requestOptions,
-        connectOptions
+        connectOptions,
+        hooks
       )
 
       const saneOperationId = Oas3Tools.sanitize(
@@ -634,7 +641,8 @@ function getFieldForOperation<TSource, TContext, TArgs>(
   baseUrl: string,
   data: PreprocessingData<TSource, TContext, TArgs>,
   requestOptions: NodeRequest.OptionsWithUrl,
-  connectOptions: ConnectOptions
+  connectOptions: ConnectOptions,
+  hooks: Hooks<TSource, TContext, TArgs>
 ): GraphQLFieldConfig<TSource, TContext | SubscriptionContext, TArgs> {
   // Create GraphQL Type for response:
   const type = getGraphQLType({
@@ -669,7 +677,8 @@ function getFieldForOperation<TSource, TContext, TArgs>(
     const resolve = getPublishResolver({
       operation,
       responseName: responseSchemaName,
-      data
+      data,
+      hooks
     })
 
     const subscribe = getSubscribe({
@@ -695,7 +704,8 @@ function getFieldForOperation<TSource, TContext, TArgs>(
       payloadName: payloadSchemaName,
       data,
       baseUrl,
-      requestOptions
+      requestOptions,
+      hooks
     })
 
     return {

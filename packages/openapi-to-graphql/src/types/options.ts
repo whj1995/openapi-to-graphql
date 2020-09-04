@@ -66,8 +66,12 @@ export type RequestOptions<TSource, TContext, TArgs> = Omit<
 > & {
   headers?: Headers | RequestHeadersFunction<TSource, TContext, TArgs>
 }
-      
+
 export type Options<TSource, TContext, TArgs> = Partial<InternalOptions<TSource, TContext, TArgs>>
+
+export type Hooks<TSource, TContext, TArgs> = {
+  beforeResponseResolve?: (source: TSource, args: TArgs, ctx: TContext, info: GraphQLResolveInfo & {body: any}) => void;
+};
 
 export type InternalOptions<TSource, TContext, TArgs> = {
   /*
@@ -288,4 +292,7 @@ export type InternalOptions<TSource, TContext, TArgs> = {
    * Will forgo the title is only one OAS is provided
    */
   equivalentToMessages: boolean
+
+
+  hooks: Hooks<TSource,TContext, TArgs>
 }

@@ -465,7 +465,8 @@ function createFields({ def, links, operation, data, iteration, isInputObjectTyp
                         argsFromLink: argsFromLink,
                         data,
                         baseUrl: data.options.baseUrl,
-                        requestOptions: data.options.requestOptions
+                        requestOptions: data.options.requestOptions,
+                        hooks: {}
                     });
                     // Get arguments for link
                     const args = getArgs({

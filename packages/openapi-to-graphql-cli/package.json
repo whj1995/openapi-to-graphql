@@ -1,6 +1,6 @@
 {
-  "name": "openapi-to-graphql-cli",
-  "version": "2.2.4",
+  "name": "openapi-to-graphql-pwr-cli",
+  "version": "0.0.1",
   "description": "CLI for turning APIs described by OpenAPI Specifications (OAS) into GraphQL interfaces",
   "copyright.owner": "IBM Corp.",
   "contributors": [
@@ -12,9 +12,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ibm/openapi-to-graphql"
+    "url": "https://github.com/whj1995/openapi-to-graphql"
   },
-  "homepage": "https://github.com/ibm/openapi-to-graphql",
+  "homepage": "https://github.com/whj1995/openapi-to-graphql",
   "keywords": [
     "ibm",
     "strongloop",
@@ -53,7 +53,7 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
     "js-yaml": "^3.12.0",
-    "openapi-to-graphql": "^2.2.4",
+    "openapi-to-graphql-pwr": "^2.2.4",
     "request": "^2.88.0"
   },
   "devDependencies": {

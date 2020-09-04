@@ -2,7 +2,7 @@
  * Functions to create resolve functions.
  */
 import { ParameterObject } from './types/oas3';
-import { ConnectOptions } from './types/options';
+import { ConnectOptions, Hooks } from './types/options';
 import { Operation } from './types/operation';
 import { SubscriptionContext } from './types/graphql';
 import { PreprocessingData } from './types/preprocessing_data';
@@ -18,6 +18,7 @@ declare type GetResolverParams<TSource, TContext, TArgs> = {
     data: PreprocessingData<TSource, TContext, TArgs>;
     baseUrl?: string;
     requestOptions?: RequestOptions<TSource, TContext, TArgs>;
+    hooks: Hooks<TSource, TContext, TArgs>;
 };
 declare type GetSubscribeParams<TSource, TContext, TArgs> = {
     operation: Operation;
@@ -35,7 +36,7 @@ export declare function getPublishResolver<TSource, TContext, TArgs>({ operation
  * If operationType is Query/Mutation, creates and returns a resolver function
  * that performs API requests for the given GraphQL query
  */
-export declare function getResolver<TSource, TContext, TArgs>({ operation, argsFromLink, payloadName, data, baseUrl, requestOptions }: GetResolverParams<TSource, TContext, TArgs>): GraphQLFieldResolver<TSource, TContext, TArgs>;
+export declare function getResolver<TSource, TContext, TArgs>({ operation, argsFromLink, payloadName, data, baseUrl, requestOptions, hooks }: GetResolverParams<TSource, TContext, TArgs>): GraphQLFieldResolver<TSource, TContext, TArgs>;
 /**
  * Extracts data from the GraphQL arguments of a particular field
  *

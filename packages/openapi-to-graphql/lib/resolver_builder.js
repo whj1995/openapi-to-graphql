@@ -182,7 +182,7 @@ exports.getPublishResolver = getPublishResolver;
  * If operationType is Query/Mutation, creates and returns a resolver function
  * that performs API requests for the given GraphQL query
  */
-function getResolver({ operation, argsFromLink = {}, payloadName, data, baseUrl, requestOptions }) {
+function getResolver({ operation, argsFromLink = {}, payloadName, data, baseUrl, requestOptions, hooks }) {
     // Determine the appropriate URL:
     if (typeof baseUrl === 'undefined') {
         baseUrl = Oas3Tools.getBaseUrl(operation);
@@ -558,9 +558,15 @@ function getResolver({ operation, argsFromLink = {}, payloadName, data, baseUrl,
                                     }
                                     saneData = arraySaneData;
                                 }
+                                if (hooks.beforeResponseResolve) {
+                                    hooks.beforeResponseResolve(source, args, context, Object.assign(Object.assign({}, info), { body: saneData }));
+                                }
                                 resolve(saneData);
                             }
                             else {
+                                if (hooks.beforeResponseResolve) {
+                                    hooks.beforeResponseResolve(source, args, context, Object.assign(Object.assign({}, info), { body: body }));
+                                }
                                 // TODO: Handle YAML
                                 resolve(body);
                             }

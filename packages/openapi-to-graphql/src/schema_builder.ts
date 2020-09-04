@@ -44,6 +44,7 @@ import { getResolver } from './resolver_builder'
 import { createDataDef } from './preprocessor'
 import debug from 'debug'
 import { handleWarning, sortObject, MitigationTypes } from './utils'
+import { Hooks } from './types/options'
 
 type GetArgsParams<TSource, TContext, TArgs> = {
   requestPayloadDef?: DataDefinition
@@ -92,6 +93,7 @@ export function getGraphQLType<TSource, TContext, TArgs>({
   data,
   iteration = 0,
   isInputObjectType = false
+
 }: CreateOrReuseComplexTypeParams<TSource, TContext, TArgs>):
   | GraphQLOutputType
   | GraphQLInputType {
@@ -675,7 +677,8 @@ function createFields<TSource, TContext, TArgs>({
             argsFromLink: argsFromLink as { [key: string]: string },
             data,
             baseUrl: data.options.baseUrl,
-            requestOptions: data.options.requestOptions
+            requestOptions: data.options.requestOptions,
+            hooks: {}
           })
 
           // Get arguments for link
